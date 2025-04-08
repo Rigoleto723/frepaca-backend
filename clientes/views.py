@@ -8,6 +8,6 @@ class ClienteViewSet(viewsets.ModelViewSet):
     API para gestionar clientes.
     Soporta listar, crear, actualizar y eliminar clientes.
     """
-    queryset = Cliente.objects.all().order_by('-fecha_registro')  # Ordenar por fecha reciente
+    queryset = Cliente.objects.all().order_by('-fechaCreacion')  # Ordenar por fecha reciente
     serializer_class = ClienteSerializer
     permission_classes = [IsAuthenticated, IsAdminUser]

@@ -106,7 +106,7 @@ class ResetPasswordSerializer(serializers.Serializer):
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     """Serializador para actualizar información del usuario."""
-    groups = serializers.ListField(child=serializers.CharField(), write_only=True)
+    groups = serializers.ListField(child=serializers.CharField(), write_only=True, required=False)
 
     class Meta:
         model = CustomUser
@@ -114,7 +114,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         read_only_fields = ['username']
 
     def update(self, instance, validated_data):
-        groups_data = validated_data.pop('groups', [])
+        groups_data = validated_data.pop('groups', None)
         # Actualizar los otros campos
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
