@@ -16,28 +16,28 @@ class Command(BaseCommand):
             self.stdout.write(f'Procesando préstamo {prestamo.id}...')
             
             # Fecha inicial (fecha de creación del préstamo)
-            fecha_actual = prestamo.fechaInicio
+            fechaActual = prestamo.fechaInicio
             
             # Generar cobros hasta el mes actual
-            while fecha_actual <= hoy:
+            while fechaActual <= hoy:
                 # Verificar si ya existe un cobro para este mes
                 cobro_existente = Cobro.objects.filter(
                     prestamo=prestamo,
-                    fecha_vencimiento__year=fecha_actual.year,
-                    fecha_vencimiento__month=fecha_actual.month
+                    fechaVencimiento__year=fechaActual.year,
+                    fechaVencimiento__month=fechaActual.month
                 ).first()
                 
                 if not cobro_existente:
                     # Calcular el monto de intereses mensual
-                    monto_interes = (prestamo.saldoActual * prestamo.tasaInteresMensual) / 100
+                    montoInteres = (prestamo.saldoActual * prestamo.tasaInteresMensual) / 100
                     
                     # Crear el cobro
                     Cobro.objects.create(
                         prestamo=prestamo,
-                        monto_interes=monto_interes,
-                        fecha_generacion=fecha_actual,
-                        fecha_vencimiento=fecha_actual,
-                        notas=f"Cobro de intereses mensual - {fecha_actual.strftime('%B %Y')}"
+                        montoInteres=montoInteres,
+                        fechaGeneracion=fechaActual,
+                        fechaVencimiento=fechaActual,
+                        notas=f"Cobro de intereses mensual - {fechaActual.strftime('%B %Y')}"
                     )
                     
                     self.stdout.write(

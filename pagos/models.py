@@ -13,7 +13,7 @@ class Pago(models.Model):
     cobro = models.ForeignKey('cobros.Cobro', on_delete=models.SET_NULL, null=True, blank=True, related_name="pagos")
     monto = models.DecimalField(max_digits=10, decimal_places=2)
     tipo = models.CharField(max_length=20, choices=TIPO_PAGO)
-    fechaPago = models.DateTimeField()
+    fechaPago = models.DateField(null=True, blank=True)
     notas = models.TextField(blank=True, null=True)
 
     def __str__(self):
