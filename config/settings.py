@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'pagos',
     'cobros',
     'dashboard',
+    'reportes',
     'authentication',
     'docs',
     'rest_framework',
