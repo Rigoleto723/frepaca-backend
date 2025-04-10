@@ -9,5 +9,5 @@ urlpatterns = [
     path('api/', include('pagos.urls')),
     path('api/', include('cobros.urls')),
     path('api/', include('dashboard.urls')),
-    path('api/', include('docs.urls')),
+    path('api/docs/', include('docs.urls')),
 ]

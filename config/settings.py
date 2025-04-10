@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     'prestamos',
     'pagos',
     'cobros',
-    'historial_liquidacion',
     'dashboard',
     'authentication',
     'docs',

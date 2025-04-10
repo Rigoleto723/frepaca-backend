@@ -1,9 +1,10 @@
 from rest_framework import serializers
 from .models import Prestamo
 from clientes.serializers import ClienteSerializer
+from .models import Cliente
 
 class PrestamoSerializer(serializers.ModelSerializer):
-    cliente = ClienteSerializer(read_only=True)
+    clienteDetalle = ClienteSerializer(source='cliente', read_only=True)
 
     class Meta:
         model = Prestamo
