@@ -6,41 +6,38 @@ from prestamos.models import Prestamo
 from cobros.models import Cobro
 from pagos.models import Pago
 from .serializers import DashboardSerializer
+from datetime import datetime, timedelta
 
 @api_view(['GET'])
-def obtener_metricas(request):
-    fecha_inicio = now().replace(day=1)  # Primer día del mes
-    fecha_fin = now()  # Fecha actual
-
-    # Total invertido en préstamos activos
-    total_invertido = Prestamo.objects.filter(activo=True).aggregate(Sum('saldo_actual'))['saldo_actual__sum'] or 0
-
+def obtenerMetricas(request):
+    # Total invertido (suma de saldos actuales de préstamos activos)
+    total_invertido = Prestamo.objects.filter(estado='Activo').aggregate(total=Sum('saldoActual'))['total'] or 0
+    
+    # Total de intereses generados (suma de montos de intereses de cobros no pagados)
+    total_intereses = Cobro.objects.filter(pagado=False).aggregate(total=Sum('montoInteres'))['total'] or 0
+    
+    # Total de préstamos activos
+    total_prestamos_activos = Prestamo.objects.filter(estado='Activo').count()
+    
+    # Total de préstamos pagados
+    total_prestamos_pagados = Prestamo.objects.filter(estado='Pagado').count()
+    
     # Total de cobros pendientes
-    total_cobros_pendientes = Cobro.objects.filter(pagado=False).aggregate(Sum('monto_interes'))['monto_interes__sum'] or 0
-
-    # Clientes al día y en mora
-    clientes_al_dia = Cobro.objects.filter(pagado=True).values('prestamo__cliente').distinct().count()
-    clientes_en_mora = Cobro.objects.filter(pagado=False).values('prestamo__cliente').distinct().count()
-
-    # Rendimiento teórico mensual (cobros generados en el mes)
-    rendimiento_teorico_mensual = Cobro.objects.filter(
-        fecha_generacion__range=[fecha_inicio, fecha_fin]
-    ).aggregate(Sum('monto_interes'))['monto_interes__sum'] or 0
-
-    # Rendimiento real (pagos recibidos en el mes)
-    rendimiento_real = Pago.objects.filter(
-        fecha_pago__range=[fecha_inicio, fecha_fin], tipo='interes'
-    ).aggregate(Sum('monto'))['monto__sum'] or 0
-
-    # Serializar la respuesta
-    data = {
-        "total_invertido": total_invertido,
-        "total_cobros_pendientes": total_cobros_pendientes,
-        "clientes_al_dia": clientes_al_dia,
-        "clientes_en_mora": clientes_en_mora,
-        "rendimiento_teorico_mensual": rendimiento_teorico_mensual,
-        "rendimiento_real": rendimiento_real,
-    }
-
-    serializer = DashboardSerializer(data)
-    return Response(serializer.data)
+    total_cobros_pendientes = Cobro.objects.filter(pagado=False).count()
+    
+    # Total de pagos realizados hoy
+    hoy = datetime.now().date()
+    total_pagos_hoy = Pago.objects.filter(fechaPago=hoy).count()
+    
+    # Monto total de pagos realizados hoy
+    monto_pagos_hoy = Pago.objects.filter(fechaPago=hoy).aggregate(total=Sum('monto'))['total'] or 0
+    
+    return Response({
+        'totalInvertido': float(total_invertido),
+        'totalIntereses': float(total_intereses),
+        'totalPrestamosActivos': total_prestamos_activos,
+        'totalPrestamosPagados': total_prestamos_pagados,
+        'totalCobrosPendientes': total_cobros_pendientes,
+        'totalPagosHoy': total_pagos_hoy,
+        'montoPagosHoy': float(monto_pagos_hoy)
+    })

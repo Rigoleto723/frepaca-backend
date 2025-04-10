@@ -18,5 +18,5 @@ class Cobro(models.Model):
         if pago.tipo == 'interes':
             self.pagado = True
             self.montoPagado = pago.monto
-            self.fechaPago = pago.fechaPago.date()
+            self.fechaPago = pago.fechaPago
             self.save()
