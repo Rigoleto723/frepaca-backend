@@ -7,19 +7,33 @@ from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
 @receiver(post_save, sender=Prestamo)
-def generar_primer_cobro(sender, instance, created, **kwargs):
+def generar_cobros_historicos(sender, instance, created, **kwargs):
     if created:
-        # Calcular el monto de intereses mensual
-        montoInteres = (instance.montoInicial * instance.tasaInteresMensual) / 100
+        hoy = timezone.now().date()
+        # El primer cobro debe ser un mes después de la fecha de inicio
+        fecha_actual = instance.fechaInicio + relativedelta(months=1)
         
-        # Calcular la fecha de vencimiento (exactamente un mes después, manteniendo el mismo día)
-        fechaVencimiento = instance.fechaInicio + relativedelta(months=1)
-        
-        # Crear el primer cobro
-        Cobro.objects.create(
-            prestamo=instance,
-            montoInteres=montoInteres,
-            fechaGeneracion=instance.fechaInicio,
-            fechaVencimiento=fechaVencimiento,
-            notas=f"Cobro de intereses mensual - {fechaVencimiento.strftime('%B %Y')}"
-        ) 
+        # Generar cobros hasta el mes actual
+        while fecha_actual <= hoy:
+            # Verificar si ya existe un cobro para este mes
+            cobro_existente = Cobro.objects.filter(
+                prestamo=instance,
+                fechaVencimiento__year=fecha_actual.year,
+                fechaVencimiento__month=fecha_actual.month
+            ).first()
+            
+            if not cobro_existente:
+                # Calcular el monto de intereses mensual
+                montoInteres = (instance.saldoActual * instance.tasaInteresMensual) / 100
+                
+                # Crear el cobro
+                Cobro.objects.create(
+                    prestamo=instance,
+                    montoInteres=montoInteres,
+                    fechaGeneracion=instance.fechaInicio,  # La fecha de generación es cuando se otorgó el préstamo
+                    fechaVencimiento=fecha_actual,  # La fecha de vencimiento es un mes después
+                    notas=f"Cobro de intereses mensual - {fecha_actual.strftime('%B %Y')}"
+                )
+            
+            # Avanzar al siguiente mes
+            fecha_actual = fecha_actual + relativedelta(months=1) 

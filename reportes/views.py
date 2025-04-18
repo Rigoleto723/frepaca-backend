@@ -22,7 +22,7 @@ def convert_decimal_to_string(obj):
 class ReporteViewSet(viewsets.ModelViewSet):
     queryset = Reporte.objects.all()
     serializer_class = ReporteSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['get'])
     def activos(self, request):

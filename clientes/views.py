@@ -10,4 +10,4 @@ class ClienteViewSet(viewsets.ModelViewSet):
     """
     queryset = Cliente.objects.all().order_by('-fechaCreacion')  # Ordenar por fecha reciente
     serializer_class = ClienteSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]

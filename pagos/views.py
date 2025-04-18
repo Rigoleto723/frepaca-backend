@@ -6,4 +6,4 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 class PagoViewSet(viewsets.ModelViewSet):
     queryset = Pago.objects.all()
     serializer_class = PagoSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]

@@ -8,7 +8,7 @@ from rest_framework.response import Response
 class CobroViewSet(viewsets.ModelViewSet):
     queryset = Cobro.objects.all()
     serializer_class = CobroSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
     @action(detail=False, methods=['get'], url_path='prestamo/(?P<prestamo_id>\d+)')
     def by_prestamo(self, request, prestamo_id=None):

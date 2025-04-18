@@ -6,5 +6,5 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 class PrestamoViewSet(viewsets.ModelViewSet):
     queryset = Prestamo.objects.all()
     serializer_class = PrestamoSerializer
-    permission_classes = [IsAuthenticated, IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
