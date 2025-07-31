@@ -16,7 +16,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config("FRONTEND_URL", default="localhost").split(",")
 
 
 # Application definition
@@ -132,7 +132,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
+#CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOWED_ORIGINS = [
     config('FRONTEND_URL', default='http://localhost:3000'),
@@ -146,6 +146,8 @@ REST_FRAMEWORK = {
 }
 
 AUTH_USER_MODEL = "authentication.CustomUser"
+
+TIME_ZONE = 'America/Bogota'
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=config('JWT_ACCESS_TOKEN_LIFETIME', default=7, cast=int)),
