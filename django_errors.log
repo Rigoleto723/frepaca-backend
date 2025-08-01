@@ -1,0 +1,23 @@
+Internal Server Error: /api/auth/login/
+Traceback (most recent call last):
+  File "/opt/frepaca-backend/venv/lib/python3.10/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+  File "/opt/frepaca-backend/venv/lib/python3.10/site-packages/corsheaders/middleware.py", line 59, in __call__
+    self.add_response_headers(request, response)
+  File "/opt/frepaca-backend/venv/lib/python3.10/site-packages/corsheaders/middleware.py", line 110, in add_response_headers
+    and not self.origin_found_in_white_lists(origin, url)
+  File "/opt/frepaca-backend/venv/lib/python3.10/site-packages/corsheaders/middleware.py", line 145, in origin_found_in_white_lists
+    or self._url_in_whitelist(url)
+  File "/opt/frepaca-backend/venv/lib/python3.10/site-packages/corsheaders/middleware.py", line 165, in _url_in_whitelist
+    origins = [urlsplit(o) for o in conf.CORS_ALLOWED_ORIGINS]
+  File "/opt/frepaca-backend/venv/lib/python3.10/site-packages/corsheaders/middleware.py", line 165, in <listcomp>
+    origins = [urlsplit(o) for o in conf.CORS_ALLOWED_ORIGINS]
+  File "/usr/lib/python3.10/urllib/parse.py", line 494, in urlsplit
+    url, scheme, _coerce_result = _coerce_args(url, scheme)
+  File "/usr/lib/python3.10/urllib/parse.py", line 137, in _coerce_args
+    return _decode_args(args) + (_encode_result,)
+  File "/usr/lib/python3.10/urllib/parse.py", line 121, in _decode_args
+    return tuple(x.decode(encoding, errors) if x else '' for x in args)
+  File "/usr/lib/python3.10/urllib/parse.py", line 121, in <genexpr>
+    return tuple(x.decode(encoding, errors) if x else '' for x in args)
+AttributeError: 'list' object has no attribute 'decode'
