@@ -3,8 +3,8 @@ from clientes.models import Cliente
 
 class Prestamo(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name="prestamos")
-    montoInicial = models.DecimalField(max_digits=10, decimal_places=2)
-    saldoActual = models.DecimalField(max_digits=10, decimal_places=2)
+    montoInicial = models.DecimalField(max_digits=16, decimal_places=2)
+    saldoActual = models.DecimalField(max_digits=16, decimal_places=2)
     tasaInteresMensual = models.DecimalField(max_digits=5, decimal_places=2)
     fechaInicio = models.DateField()
     fechaCierre = models.DateField(null=True, blank=True)
