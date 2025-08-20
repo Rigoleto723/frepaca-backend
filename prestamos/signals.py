@@ -6,6 +6,23 @@ from cobros.models import Cobro
 from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 
+
+@receiver(post_save, sender=Prestamo)
+def crear_cobro_inicial_intereses(sender, instance, created, **kwargs):
+    """
+    Si el préstamo se crea con intereses pendientes iniciales,
+    se genera un cobro especial en la fecha de inicio.
+    """
+    if created and instance.interesesPendientesIniciales > 0:
+        Cobro.objects.create(
+            prestamo=instance,
+            montoInteres=instance.interesesPendientesIniciales,
+            fechaGeneracion=instance.fechaInicio,
+            fechaVencimiento=instance.fechaInicio,  # opcional: podrías poner fechaInicio + 1 mes
+            pagado=False,
+            notas="Intereses pendientes acumulados antes de registrar el préstamo"
+        )
+
 @receiver(post_save, sender=Prestamo)
 def generar_cobros_historicos(sender, instance, created, **kwargs):
     if created:
