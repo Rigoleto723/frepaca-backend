@@ -5,6 +5,7 @@ from .models import Cliente
 
 class PrestamoSerializer(serializers.ModelSerializer):
     clienteDetalle = ClienteSerializer(source='cliente', read_only=True)
+    fiadorDetalle = ClienteSerializer(source='fiador', read_only=True)
 
     class Meta:
         model = Prestamo

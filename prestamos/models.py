@@ -12,6 +12,7 @@ class Prestamo(models.Model):
     interesMensualGenerado = models.DecimalField(max_digits=10, decimal_places=2)
     estado = models.CharField(max_length=10, default='Activo')
     interesesPendientesIniciales = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Intereses acumulados antes de registrar el préstamo en el sistema")
+    notas = models.TextField(null=True, blank=True, help_text="Información adicional o comentarios sobre el préstamo")
     fechaCreacion = models.DateTimeField(auto_now_add=True)
     fechaActualizacion = models.DateTimeField(auto_now=True)
 
