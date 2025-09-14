@@ -9,7 +9,7 @@ class Command(BaseCommand):
     help = 'Genera cobros históricos para préstamos desde su fecha de creación hasta el presente'
 
     def handle(self, *args, **kwargs):
-        hoy = timezone.now().date()
+        hoy = datetime.now().date()
         prestamos = Prestamo.objects.all()
 
         for prestamo in prestamos:

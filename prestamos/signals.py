@@ -26,7 +26,7 @@ def crear_cobro_inicial_intereses(sender, instance, created, **kwargs):
 @receiver(post_save, sender=Prestamo)
 def generar_cobros_historicos(sender, instance, created, **kwargs):
     if created:
-        hoy = timezone.now().date()
+        hoy = datetime.now().date()
         # El primer cobro debe ser un mes después de la fecha de inicio
         fecha_actual = instance.fechaInicio + relativedelta(months=1)
         

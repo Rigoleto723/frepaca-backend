@@ -9,7 +9,7 @@ class Command(BaseCommand):
     help = 'Genera cobros mensuales para préstamos activos'
 
     def handle(self, *args, **kwargs):
-        hoy = timezone.now().date()
+        hoy = datetime.now().date()
         prestamosActivos = Prestamo.objects.filter(estado='Activo')
 
         for prestamo in prestamosActivos:
