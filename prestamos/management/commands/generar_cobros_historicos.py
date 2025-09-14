@@ -16,33 +16,26 @@ class Command(BaseCommand):
             self.stdout.write(f'Procesando préstamo {prestamo.id}...')
             
             # Fecha inicial (fecha de creación del préstamo)
-            fechaActual = prestamo.fechaInicio
+            fecha_actual = prestamo.fechaInicio + relativedelta(months=1)
             
             # Generar cobros hasta el mes actual
-            while fechaActual <= hoy:
-                # Verificar si ya existe un cobro para este mes
+            while fecha_actual <= hoy:
                 cobro_existente = Cobro.objects.filter(
                     prestamo=prestamo,
-                    fechaVencimiento__year=fechaActual.year,
-                    fechaVencimiento__month=fechaActual.month
+                    fechaVencimiento=fecha_actual
                 ).first()
-                
+
                 if not cobro_existente:
-                    # Calcular el monto de intereses mensual
                     montoInteres = (prestamo.saldoActual * prestamo.tasaInteresMensual) / 100
-                    
-                    # Crear el cobro
                     Cobro.objects.create(
                         prestamo=prestamo,
                         montoInteres=montoInteres,
-                        fechaGeneracion=fechaActual,
-                        fechaVencimiento=fechaActual,
-                        notas=f"Cobro de intereses mensual - {fechaActual.strftime('%B %Y')}"
+                        fechaGeneracion=hoy,
+                        fechaVencimiento=fecha_actual,
+                        notas=f"Cobro de intereses mensual - {fecha_actual.strftime('%B %Y')}"
                     )
-                    
                     self.stdout.write(
                         self.style.SUCCESS(f'Cobro generado para préstamo {prestamo.id} con fecha {fecha_actual}')
                     )
-                
-                # Avanzar al siguiente mes
-                fecha_actual = fecha_actual + relativedelta(months=1) 
+
+                fecha_actual += relativedelta(months=1)

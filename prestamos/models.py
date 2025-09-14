@@ -1,9 +1,11 @@
 from django.db import models
 from clientes.models import Cliente
+from inversionistas.models import Inversionista
 
 class Prestamo(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name="prestamos")
     fiador = models.ForeignKey(Cliente, on_delete=models.SET_NULL, null=True, blank=True, related_name="prestamos_como_fiador")
+    inversionista = models.ForeignKey(Inversionista, on_delete=models.SET_NULL, null=True, blank=True, related_name="prestamos")
     montoInicial = models.DecimalField(max_digits=16, decimal_places=2)
     saldoActual = models.DecimalField(max_digits=16, decimal_places=2)
     tasaInteresMensual = models.DecimalField(max_digits=5, decimal_places=2)
